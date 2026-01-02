@@ -1,6 +1,8 @@
-from datetime import datetime, timezone
+from datetime import datetime
 
 from sqlmodel import Field, SQLModel
+
+from utils import nowtime
 
 
 class Link(SQLModel, table=True):
@@ -12,9 +14,7 @@ class Link(SQLModel, table=True):
     short_url: str = Field(index=True, unique=True, max_length=36, nullable=False)
     clicks: int = Field(default=0, ge=0, nullable=False)
 
-    created_at: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc), nullable=False
-    )
+    created_at: datetime = Field(default_factory=nowtime, nullable=False)
 
     expires_at: datetime | None = Field(
         default=None,

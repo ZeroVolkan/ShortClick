@@ -1,6 +1,7 @@
 # Custom
 .ruff*
 uv.lock
+database.db
 
 # Python-generated files
 __pycache__/
