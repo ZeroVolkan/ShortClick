@@ -2,7 +2,7 @@ from datetime import datetime
 
 from sqlmodel import Field, SQLModel
 
-from utils import nowtime
+from .utils import nowtime
 
 
 class Link(SQLModel, table=True):
@@ -11,7 +11,7 @@ class Link(SQLModel, table=True):
     id: int = Field(default=None, primary_key=True, index=True)
 
     original_url: str = Field(index=True, unique=True, max_length=2048, nullable=False)
-    short_url: str = Field(index=True, unique=True, max_length=36, nullable=False)
+    short_url: str = Field(index=True, unique=True, max_length=20, nullable=False)
     clicks: int = Field(default=0, ge=0, nullable=False)
 
     created_at: datetime = Field(default_factory=nowtime, nullable=False)

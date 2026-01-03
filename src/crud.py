@@ -1,8 +1,8 @@
 from sqlmodel import Session, delete, select
 
-from database import engine
-from models import Link
-from utils import generate_short_url, nowtime
+from .database import engine
+from .models import Link
+from .utils import generate_short_url, nowtime
 
 
 def create_link(original_url: str) -> Link:

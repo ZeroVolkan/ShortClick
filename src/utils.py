@@ -7,4 +7,4 @@ def nowtime():
 
 
 def generate_short_url() -> str:
-    return str(uuid.uuid4().hex[:6])
+    return str(uuid.uuid4().hex[:20])

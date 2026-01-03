@@ -1,14 +1,14 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import RedirectResponse
 
-from crud import (
+from .crud import (
     create_link,
     get_link_by_id,
     get_link_by_original_url,
     get_link_by_short_url,
     increment_link,
 )
-from models import Link
+from .models import Link
 
 app = FastAPI()
 
