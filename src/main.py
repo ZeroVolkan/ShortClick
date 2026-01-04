@@ -11,7 +11,7 @@ from .crud import (
     increment_link,
 )
 from .logger import logger
-from .models import Link
+from .models import CreateLinkRequest, Link
 from .utils import check_url
 
 
@@ -30,17 +30,6 @@ def index():
     return get_all_links()
 
 
-@app.get("/{short_url}")
-def click(short_url: str):
-    link = get_link_by_short_url(short_url)
-
-    if link:
-        increment_link(link.id)
-        return RedirectResponse(link.original_url, status_code=301)
-
-    raise HTTPException(status_code=404, detail="Link not found")
-
-
 @app.get("/info")
 def info(
     link_id: int | None = None,
@@ -56,13 +45,21 @@ def info(
     raise HTTPException(status_code=404, detail="Link not found")
 
 
-@app.post("/create/{originate_url}")
-def create_click(originate_url: str) -> Link:
-    if not check_url(originate_url):
+@app.post("/create")
+def create_click(request: CreateLinkRequest) -> Link:
+    url = str(request.url)
+    if not check_url(url):
         raise HTTPException(status_code=404, detail="Invalid URL")
 
-    return (
-        existing
-        if (existing := get_link_by_original_url(originate_url))
-        else create_link(originate_url)
-    )
+    return existing if (existing := get_link_by_original_url(url)) else create_link(url)
+
+
+@app.get("/{short_url}")
+def click(short_url: str):
+    link = get_link_by_short_url(short_url)
+
+    if link:
+        increment_link(link.id)
+        return RedirectResponse(link.original_url, status_code=301)
+
+    raise HTTPException(status_code=404, detail="Link not found")

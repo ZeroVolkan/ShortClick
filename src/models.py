@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from pydantic import BaseModel, HttpUrl
 from sqlmodel import Field, SQLModel
 
 from .utils import nowtime
@@ -21,3 +22,7 @@ class Link(SQLModel, table=True):
         index=True,
         nullable=True,
     )
+
+
+class CreateLinkRequest(BaseModel):
+    url: HttpUrl

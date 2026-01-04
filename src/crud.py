@@ -1,3 +1,5 @@
+import random
+import string
 from typing import Sequence
 
 from loguru import logger
@@ -5,12 +7,23 @@ from sqlmodel import Session, delete, select
 
 from .database import engine
 from .models import Link
-from .utils import check_url, generate_short_url, nowtime
+from .utils import check_url, nowtime
 
 
-def create_link(original_url: str) -> Link:
+def _generate_unique_short_url(session: Session, length: int = 6) -> str:
+    for _ in range(10):
+        short = "".join(random.choices(string.ascii_letters + string.digits, k=length))
+        existing = session.exec(select(Link).where(Link.short_url == short)).first()
+
+        if not existing:
+            return short
+
+    return _generate_unique_short_url(session, length + 1)
+
+
+def create_link(original_url: str, length: int = 6) -> Link:
     with Session(engine) as session:
-        short_url = generate_short_url()
+        short_url = _generate_unique_short_url(session, length)
 
         link = Link(original_url=original_url, short_url=short_url)
         session.add(link)
