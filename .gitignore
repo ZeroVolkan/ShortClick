@@ -2,6 +2,7 @@
 .ruff*
 uv.lock
 database.db
+logs
 
 # Python-generated files
 __pycache__/
