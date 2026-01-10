@@ -1,5 +1,7 @@
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import RedirectResponse
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
 from .crud import (
     clear_bad_links,
@@ -16,18 +18,19 @@ from .utils import check_url
 
 
 def main():
-    """Generaly work"""
     logger.info("Started cleaner bad links")
     clear_bad_links()
 
 
 main()
 app = FastAPI()
+app.mount("/static", StaticFiles(directory="src/static"), name="static")
+templates = Jinja2Templates(directory="src/templates")
 
 
-@app.get("/")
-def index():
-    return get_all_links()
+@app.get("/", response_class=HTMLResponse)
+def index(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
 
 @app.get("/info")
